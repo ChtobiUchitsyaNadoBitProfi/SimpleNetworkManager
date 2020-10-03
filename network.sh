@@ -6,7 +6,7 @@ then
 	exit 1
 fi
 
-while getopts ":hau:d:p:m:g:k:s:n" opt
+while getopts ":hau:d:p:m:g:k:s:n:" opt
 do
 	case ${opt} in
 	h)
