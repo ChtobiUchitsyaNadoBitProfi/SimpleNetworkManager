@@ -34,43 +34,17 @@ do
 	a) echo "Вывод всех сетевых интерфейсов"
 		ifconfig -a;;
 	u) echo "Включение сетевых интерфейсов"
-		while true;
-		do
-			shift
-			if [[ ${1} == "" ]]
-			then
-				break
-			fi			
-			if [[ ${1} =~ ^-[a-zA-Z]$ ]]
-			then
-				OPTIND=$OPTIND-2
-				break
-			fi
-			ifconfig ${1} up
-		done;;
+		sudo ifconfig ${OPTARG} up;;
 	d) echo "Выключение сетевых интерфейсов"
-		while true;
-		do
-			shift
-			if [[ ${1} == "" ]]
-			then
-				break
-			fi			
-			if [[ ${1} =~ ^-[a-zA-Z]$ ]]
-			then
-				OPTIND=$OPTIND-2
-				break
-			fi
-		    ifconfig ${1} down
-		done;;
+		sudo ifconfig ${OPTARG} down;;
 	p) echo "Установка IP для интерфейса ${OPTARG}"
 		echo "Введите устанавливаемый IP: "
 		read my_ip;
-		ifconfig ${OPTARG} ${my_ip};;
+		sudo ifconfig ${OPTARG} ${my_ip};;
 	m) echo "Установка mask для интерфейса ${OPTARG}"
 		echo "Введите устанавливаемый mask: "
 		read my_mask;
-		ifconfig ${OPTARG} netmask ${my_mask};;
+		sudo ifconfig ${OPTARG} netmask ${my_mask};;
 	g) echo "Установка шлюза по умолчанию с адресом ${OPTARG}"
 		route add default gw ${OPTARG};;
 	k) echo "Убийство процесса который занимает порт ${OPTARG}"
