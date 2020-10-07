@@ -9,8 +9,7 @@ fi
 while getopts ":hau:d:p:m:g:k:s:n:" opt
 do
 	case ${opt} in
-	h)
-	helpText="\
+	h) helpText="\
 Использование: ./network.sh [КЛЮЧ]...
 
 Доступные ключи:
@@ -32,7 +31,7 @@ do
     (Пример: -n localhost - выведет результаты сканирования сети localhost)
     
 Авторы: Мельников Иван, Беседин Яков"
-			echo -e "$helpText";;		
+	    echo -e "$helpText";;		
 	a) echo "Вывод всех сетевых интерфейсов"
 		ifconfig -a;;
 	u) echo "Включение сетевых интерфейсов"
@@ -49,8 +48,10 @@ do
 		sudo ifconfig ${OPTARG} netmask ${my_mask};;
 	g) echo "Установка шлюза по умолчанию с адресом ${OPTARG}"
 		route add default gw ${OPTARG};;
-	k) echo "Убийство процесса который занимает порт ${OPTARG}"
-		kill -9 ${OPTARG};;
+	k) processname=$(lsof -i -P -n | grep ${OPTARG} | awk '{print($1)}' | tail -1)
+		PID=$(pidof $processname)
+		kill -9 $PID
+		echo "Убийство процесса $processname который занимает порт(порты) $PID";;
 	s) echo "Сетевая статистика (статистика использования трафика)"
 		cat /proc/net/dev;;
 	n) echo "Карта сети для ${OPTARG}"
