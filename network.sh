@@ -19,7 +19,7 @@ do
     (Пример: -u lo enp2s0 - запустит интерфейс lo и enp2s0)
 -d  выключение сетевых интерфейсов
     (Пример использования: -d lo enp2s0 - отключит интерфейс lo и enp2s0)
--p  установка IP для интерфейса
+-i  установка IP для интерфейса
     (Пример: -p lo 127.0.0.1 - установит для интерфейса lo ip-адресс 127.0.0.1)
 -m  установка mask для интерфейса
     (Пример: -m lo 255.0.0.0 - установит для интерфейса lo маску сети 255.0.0.0)
@@ -38,7 +38,7 @@ do
 		sudo ifconfig ${OPTARG} up;;
 	d) echo "Выключение сетевых интерфейсов"
 		sudo ifconfig ${OPTARG} down;;
-	p) echo "Установка IP для интерфейса ${OPTARG}"
+	i) echo "Установка IP для интерфейса ${OPTARG}"
 		echo "Введите устанавливаемый IP: "
 		read my_ip;
 		sudo ifconfig ${OPTARG} ${my_ip};;
@@ -48,14 +48,19 @@ do
 		sudo ifconfig ${OPTARG} netmask ${my_mask};;
 	g) echo "Установка шлюза по умолчанию с адресом ${OPTARG}"
 		route add default gw ${OPTARG};;
-	k) processname=$(lsof -i -P -n | grep ${OPTARG} | awk '{print($1)}' | tail -1)
+	k) processname=$(sudo netstat -lnup | grep :${OPTARG} | awk '{print($6)}' | cut -f 2 -d '/' |tail -1)
 		PID=$(pidof $processname)
+		echo "$processname"
+		echo "$PID"
+	    # processname=$(lsof -i -P -n | grep ${OPTARG} | awk '{print($1)}' | tail -1)
+		# PID=$(pidof $processname)
 		kill -9 $PID
-		echo "Убийство процесса $processname который занимает порт(порты) $PID";;
+		echo "Убийство процесса \"$processname\" который занимает порт $PID";;
 	s) echo "Сетевая статистика (статистика использования трафика)"
 		cat /proc/net/dev;;
 	n) echo "Карта сети для ${OPTARG}"
-		nmap -A ${OPTARG};;
+		nmap -A -T 5 ${OPTARG};;
+		# sudo nmap -sV -T 5 ${OPTARG};;
 	*) echo -e "Использование: ./network.sh [КЛЮЧ]...\nВоспользуйтесь -h";;
 esac
 done
