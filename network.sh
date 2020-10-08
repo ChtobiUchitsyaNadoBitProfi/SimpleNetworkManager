@@ -50,8 +50,8 @@ do
 		route add default gw ${OPTARG};;
 	k) processname=$(sudo netstat -lnup | grep :${OPTARG} | awk '{print($6)}' | cut -f 2 -d '/' |tail -1)
 		PID=$(pidof $processname)
-		echo "$processname"
-		echo "$PID"
+		# echo "$processname"
+		# echo "$PID"
 	    # processname=$(lsof -i -P -n | grep ${OPTARG} | awk '{print($1)}' | tail -1)
 		# PID=$(pidof $processname)
 		kill -9 $PID
